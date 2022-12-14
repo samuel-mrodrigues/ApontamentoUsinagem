@@ -24,7 +24,10 @@ export const ConfiguracaoPadrao = {
     /**
      * O recurso padrão do programa, onde será feito os logins e apontamentos
      */
-    recurso_definido: ''
+    recurso_definido: {
+        codigo: '',
+        descricao: ''
+    }
 }
 
 /**
@@ -44,7 +47,10 @@ export function addChavesInexistentes(objetoCorrigir, objetoTemplate) {
                 objetoCorrigir[keyTemplate] = {};
                 ocorreuInclusao = true;
             }
-            addChavesInexistentes(objetoCorrigir[keyTemplate], objetoTemplate[keyTemplate]);
+
+            if (typeof objetoCorrigir[keyTemplate] == "string") objetoCorrigir[keyTemplate] = {}
+
+            ocorreuInclusao = addChavesInexistentes(objetoCorrigir[keyTemplate], objetoTemplate[keyTemplate]);
         } else {
             if (objetoCorrigir[keyTemplate] == undefined) {
                 objetoCorrigir[keyTemplate] = objetoTemplate[keyTemplate];
@@ -52,7 +58,6 @@ export function addChavesInexistentes(objetoCorrigir, objetoTemplate) {
             }
         }
     }
-
     return ocorreuInclusao;
 }
 

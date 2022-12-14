@@ -126,6 +126,13 @@ export const configStore = defineStore("configStore", {
             } else {
                 console.log(`Configuração verificada com sucesso, sem alterações necessarias!`);
             }
+        },
+        /**
+         * Realiza o salvamento do arquivo
+         * @returns {Boolean} True/false se o salvamento deu certo
+         */
+        salvarConfig() {
+            return this.manipuladorConfig.setConteudo(this.arquivoConfiguracao)
         }
     }
 })

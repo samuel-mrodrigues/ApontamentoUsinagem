@@ -1,5 +1,5 @@
 <template >
-    <div>
+    <div class="configuracoes">
         <p>Configuração</p>
         <div>
             <p>Selecionar recurso</p>
@@ -10,11 +10,17 @@
                 }}</option>
             </select>
         </div>
+
+        <div>
+            <button>Salvar</button>
+            <button @click="fecharJanela()">Fechar</button>
+        </div>
     </div>
 </template>
 <script>
 import axios from "axios"
 import { ConfiguracoesPrograma } from "../../../utils/Utils.js"
+import { configStore } from "@/renderer/stores/configStore"
 
 export default {
     name: "ConfigurarParametros",
@@ -41,6 +47,29 @@ export default {
         this.carregarRecursosDisponvieis()
     },
     methods: {
+        /**
+         * Solicitar o fechamento da janela
+         */
+        fecharJanela() {
+            this.emitirEvento("fechar");
+        },
+        /**
+         * 
+         * @param {('fechar')} eventoNome Nome do evento para emitir
+         * @param  {...any} args Quaisquer argumentos
+         */
+        emitirEvento(eventoNome, ...args) {
+
+            // Emitir a função disponível passada no cadastro do componente pai
+            let funcao = this.$attrs.propriedadesJanela.eventos[eventoNome]
+
+            // Se a função não foi definida, ignoro
+            if (funcao == undefined) {
+                console.log(`Não é possível emitir o evento ${eventoNome}`);
+                return;
+            }
+            funcao(...args);
+        },
         /**
          * Carrega os recursos disponvieis para selecionar, solicitando ao webservice
          */
@@ -100,10 +129,22 @@ export default {
             }
 
             this.recursosDisponiveis = recursosOrdenados
-        }
-    }
+        },
+        /**
+         * Aplica o salvamento das opções alteradas no arquivo de configuração...
+         */
+        salvar() {
+            let configAtual = configStore().$state.arquivoConfiguracao;
+
+            // Saber se teve alguma 
+            let teveAlteracao = false;
+            if (configAtual.recurso_definido.codigo != this.formulario.recursoSelecionado.codigo || configAtual.recurso_definido.descricao != this.formulario.recursoSelecionado.nome) {
+
+            }
+        },
+    },
 }
 </script>
 <style>
-
+.configuracoes {}
 </style>
